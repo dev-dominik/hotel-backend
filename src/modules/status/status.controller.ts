@@ -6,6 +6,6 @@ export class StatusController {
 
   @Get()
   status() {
-    return 'Status: OK';
+    return 'Status: OK - The application is running smoothly.';
   }
 }
