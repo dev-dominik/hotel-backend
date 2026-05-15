@@ -75,4 +75,4 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            /shop/deploy-backend.sh
+            shop/deploy-backend.sh
