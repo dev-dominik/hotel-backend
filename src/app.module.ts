@@ -1,10 +1,42 @@
 import { Module } from '@nestjs/common';
-import { StatusModule } from './modules/status/status.module';
-import { AppConfigModule } from './core/config/config.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { StatusModule } from './modules/status/status.module.js';
+import { AppConfigModule } from './core/config/config.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
-  imports: [AppConfigModule, StatusModule],
-  controllers: [],
-  providers: [],
+  imports: [
+    AppConfigModule,
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: ConfigService): TypeOrmModuleOptions => ({
+        type: 'postgres',
+        url: config.get<string>('DATABASE_URL'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
+        synchronize: false,
+        migrationsRun: true,
+        logging:
+          config.get('NODE_ENV') === 'production'
+            ? ['error']
+            : ['query', 'error', 'warn'],
+        ssl:
+          config.get('DATABASE_SSL') === 'true'
+            ? { rejectUnauthorized: false }
+            : false,
+        extra: {
+          max: parseInt(config.get('DATABASE_POOL_SIZE') ?? '10'),
+          idleTimeoutMillis: 30_000,
+          connectionTimeoutMillis: 5_000,
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    StatusModule,
+    AuthModule,
+    UsersModule,
+  ],
 })
 export class AppModule {}

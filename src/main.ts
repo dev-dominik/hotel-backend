@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { appBootstrap } from './core/boostrap/app.bootstrap';
+import { passportBootstrap } from './core/boostrap/passport.boostrap';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  passportBootstrap(app);
   await appBootstrap(app);
 }
 bootstrap().catch((error) => {

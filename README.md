@@ -96,3 +96,21 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+Migration commands (in package.json):
+
+# Generate a migration from entity changes
+
+pnpm db:migration:generate src/database/migrations/InitialMigration
+
+# Run pending migrations
+
+pnpm db:migration:run
+
+# Roll back last migration
+
+pnpm db:migration:revert
+
+# List all migrations and their status
+
+pnpm db:migration:show
