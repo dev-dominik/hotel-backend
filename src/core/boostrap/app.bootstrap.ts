@@ -7,6 +7,9 @@ export const appBootstrap = async (app: INestApplication) => {
   const appConfig = config.get<AppConfig>('app');
   if (!appConfig) throw new Error('Config not found');
 
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 1);
+
   app.enableCors({
     origin: appConfig.domain,
     credentials: true,
