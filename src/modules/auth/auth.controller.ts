@@ -6,12 +6,21 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
+import {
+  GoogleAuthGuard,
+  GoogleCallbackGuard,
+} from './guards/google-auth.guard';
+import {
+  FacebookAuthGuard,
+  FacebookCallbackGuard,
+} from './guards/facebook-auth.guard';
 import { RegisterRequest } from './dto/register.dto';
 import { LoginRequest } from './dto/login.dto';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
@@ -58,5 +67,29 @@ export class AuthController {
   me(@Req() req: Request): ClientUser | null {
     if (!req.user) return null;
     return this.authService.toClientUser(req.user);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Initiate Google OAuth login' })
+  googleLogin(): void {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleCallbackGuard)
+  @ApiOperation({ summary: 'Google OAuth callback' })
+  googleCallback(@Res() res: Response): void {
+    res.redirect('/');
+  }
+
+  @Get('facebook')
+  @UseGuards(FacebookAuthGuard)
+  @ApiOperation({ summary: 'Initiate Facebook OAuth login' })
+  facebookLogin(): void {}
+
+  @Get('facebook/callback')
+  @UseGuards(FacebookCallbackGuard)
+  @ApiOperation({ summary: 'Facebook OAuth callback' })
+  facebookCallback(@Res() res: Response): void {
+    res.redirect('/');
   }
 }

@@ -10,12 +10,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDate,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
 } from 'class-validator';
 import { UserRole } from './user.role';
+import { AuthProvider } from '../../auth/entity/auth.provider';
 
 @Entity()
 export class User {
@@ -44,14 +46,24 @@ export class User {
   @Column({ unique: true })
   name!: string;
 
-  @ApiProperty({
-    description: 'Hashed password of the user',
+  @ApiPropertyOptional({
+    description: 'Hashed password (null for OAuth users)',
     example: '$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36S0gYyFj5a2r5u4i8a',
+    nullable: true,
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @Column()
-  passwordHash!: string;
+  @Column({ type: 'varchar', nullable: true, default: null })
+  passwordHash!: string | null;
+
+  @ApiProperty({
+    description: 'Authentication provider',
+    enum: AuthProvider,
+    example: AuthProvider.LOCAL,
+  })
+  @IsEnum(AuthProvider)
+  @Column({ type: 'enum', enum: AuthProvider, default: AuthProvider.LOCAL })
+  authProvider!: AuthProvider;
 
   @ApiProperty({
     description: 'Role of the user in the system',

@@ -16,8 +16,6 @@ export const appBootstrap = async (app: INestApplication) => {
 
   const logger = new Logger('Bootstrap');
   await app.listen(appConfig.port).then(() => {
-    logger.log(
-      `Application is running on: ${appConfig.domain}:${appConfig.port}`,
-    );
+    logger.log(`Application is running on port ${appConfig.port}`);
   });
 };

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from './entity/user.entity.js';
 import { UserRole } from './entity/user.role.js';
 import { ClientUser } from './entity/user-client.entity.js';
+import { AuthProvider } from '@/modules/auth/entity/auth.provider';
 
 const BCRYPT_ROUNDS = 12;
 
@@ -38,11 +39,37 @@ export class UsersService {
       passwordHash,
       role: UserRole.USER,
       permissions: [],
+      authProvider: AuthProvider.LOCAL,
     });
 
     const saved = await this.usersRepository.save(user);
 
     return this.toClientUser(saved);
+  }
+
+  async findOrCreateOAuthUser(data: {
+    email: string;
+    name: string;
+    provider: AuthProvider;
+  }): Promise<User> {
+    const existing = await this.findByEmail(data.email);
+    if (existing && existing.authProvider !== data.provider) {
+      throw new ConflictException(
+        `Email already in use with a different provider.`,
+      );
+    }
+    if (existing) return existing;
+
+    const user = this.usersRepository.create({
+      email: data.email,
+      name: data.name,
+      passwordHash: null,
+      role: UserRole.USER,
+      permissions: [],
+      authProvider: data.provider,
+    });
+
+    return await this.usersRepository.save(user);
   }
 
   toClientUser(user: User): ClientUser {
@@ -52,6 +79,7 @@ export class UsersService {
       name: user.name,
       role: user.role,
       permissions: user.permissions,
+      authProvider: user.authProvider,
       lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
     };

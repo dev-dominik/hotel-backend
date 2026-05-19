@@ -4,6 +4,7 @@ import { UsersService } from '@/modules/users/users.service';
 import type { User } from '@/modules/users/entity/user.entity';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
 import type { RegisterRequest } from './dto/register.dto';
+import { AuthProvider } from './entity/auth.provider';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
-    if (!user) return null;
+    if (!user || !user.passwordHash) return null;
 
     const matches = await bcrypt.compare(password, user.passwordHash);
     return matches ? user : null;
@@ -23,6 +24,14 @@ export class AuthService {
       name: dto.name,
       password: dto.password,
     });
+  }
+
+  async findOrCreateOAuthUser(data: {
+    email: string;
+    name: string;
+    provider: AuthProvider;
+  }): Promise<User> {
+    return await this.usersService.findOrCreateOAuthUser(data);
   }
 
   toClientUser(user: User): ClientUser {
