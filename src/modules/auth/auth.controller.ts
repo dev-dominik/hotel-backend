@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Ip,
   Post,
   Req,
   Res,
@@ -33,8 +34,11 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  async register(@Body() dto: RegisterRequest): Promise<ClientUser> {
-    return await this.authService.register(dto);
+  async register(
+    @Body() dto: RegisterRequest,
+    @Ip() ip: string,
+  ): Promise<ClientUser> {
+    return await this.authService.register({ dto, ip });
   }
 
   @UseGuards(LocalAuthGuard)

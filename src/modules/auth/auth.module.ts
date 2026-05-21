@@ -9,6 +9,7 @@ import { SessionSerializer } from './serializers/session.serializer';
 import { UsersModule } from '@/modules/users/users.module';
 import { User } from '@/modules/users/entity/user.entity';
 import { AuthController } from './auth.controller';
+import { HCaptchaService } from './hcaptch.service';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthController } from './auth.controller';
   controllers: [AuthController],
   providers: [
     AuthService,
+    HCaptchaService,
     LocalStrategy,
     GoogleStrategy,
     FacebookStrategy,

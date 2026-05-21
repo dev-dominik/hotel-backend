@@ -26,4 +26,6 @@ export const validationSchema = Joi.object({
   FACEBOOK_DISABLED: Joi.boolean().default(false),
   FACEBOOK_APP_ID: Joi.string().optional().allow(''),
   FACEBOOK_APP_SECRET: Joi.string().optional().allow(''),
+
+  HCAPTCHA_SECRET: Joi.string().required(),
 });

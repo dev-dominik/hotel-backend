@@ -5,10 +5,14 @@ import type { User } from '@/modules/users/entity/user.entity';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
 import type { RegisterRequest } from './dto/register.dto';
 import { AuthProvider } from './entity/auth.provider';
+import { HCaptchaService } from './hcaptch.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly hCaptchaService: HCaptchaService,
+  ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
@@ -18,7 +22,16 @@ export class AuthService {
     return matches ? user : null;
   }
 
-  async register(dto: RegisterRequest): Promise<ClientUser> {
+  async register(data: {
+    dto: RegisterRequest;
+    ip: string;
+  }): Promise<ClientUser> {
+    const { dto, ip } = data;
+    await this.hCaptchaService.verifyToken({
+      token: dto.hCaptchaToken,
+      remoteIp: ip,
+    });
+
     return await this.usersService.create({
       email: dto.email,
       name: dto.name,

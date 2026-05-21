@@ -29,6 +29,9 @@ export interface AppConfig {
     appId: string;
     appSecret: string;
   };
+  hCaptcha: {
+    secret: string;
+  };
 }
 
 export default registerAs('app', () => ({
@@ -59,5 +62,8 @@ export default registerAs('app', () => ({
     disabled: process.env.FACEBOOK_DISABLED === 'true',
     appId: process.env.FACEBOOK_APP_ID ?? '',
     appSecret: process.env.FACEBOOK_APP_SECRET ?? '',
+  },
+  hCaptcha: {
+    secret: process.env.HCAPTCHA_SECRET,
   },
 }));
