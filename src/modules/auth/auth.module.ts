@@ -10,12 +10,14 @@ import { UsersModule } from '@/modules/users/users.module';
 import { User } from '@/modules/users/entity/user.entity';
 import { AuthController } from './auth.controller';
 import { HCaptchaService } from './hcaptch.service';
+import { MailModule } from '@/core/mail/mail.module';
 
 @Module({
   imports: [
     PassportModule.register({ session: true }),
     TypeOrmModule.forFeature([User]),
     UsersModule,
+    MailModule,
   ],
   controllers: [AuthController],
   providers: [

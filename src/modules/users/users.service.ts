@@ -1,5 +1,10 @@
 import * as bcrypt from 'bcrypt';
-import { ConflictException, Injectable } from '@nestjs/common';
+import * as crypto from 'crypto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity.js';
@@ -28,11 +33,12 @@ export class UsersService {
     email: string;
     name: string;
     password: string;
-  }): Promise<ClientUser> {
+  }): Promise<{ user: ClientUser; emailConfirmToken: string }> {
     const existing = await this.findByEmail(data.email);
     if (existing) throw new ConflictException('Email already in use');
 
     const passwordHash = await bcrypt.hash(data.password, BCRYPT_ROUNDS);
+    const emailConfirmToken = crypto.randomBytes(32).toString('hex');
     const user = this.usersRepository.create({
       email: data.email,
       name: data.name,
@@ -40,11 +46,25 @@ export class UsersService {
       role: UserRole.USER,
       permissions: [],
       authProvider: AuthProvider.LOCAL,
+      emailVerified: false,
+      emailConfirmToken,
     });
 
     const saved = await this.usersRepository.save(user);
 
-    return this.toClientUser(saved);
+    return { user: this.toClientUser(saved), emailConfirmToken };
+  }
+
+  async confirmEmail(token: string): Promise<void> {
+    const user = await this.usersRepository.findOne({
+      where: { emailConfirmToken: token },
+    });
+    if (!user)
+      throw new NotFoundException('Invalid or expired confirmation token');
+
+    user.emailVerified = true;
+    user.emailConfirmToken = null;
+    await this.usersRepository.save(user);
   }
 
   async findOrCreateOAuthUser(data: {
@@ -80,6 +100,7 @@ export class UsersService {
       role: user.role,
       permissions: user.permissions,
       authProvider: user.authProvider,
+      emailVerified: user.emailVerified,
       lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
     };

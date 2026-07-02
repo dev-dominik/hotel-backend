@@ -19,6 +19,13 @@ export interface AppConfig {
     sameSite: 'lax' | 'strict' | 'none';
     secure: boolean;
   };
+  mail: {
+    resend: {
+      disabled: boolean;
+      apiKey: string;
+    };
+    from: string;
+  };
   google: {
     disabled: boolean;
     clientId: string;
@@ -52,6 +59,13 @@ export default registerAs('app', () => ({
     maxAge: parseInt(process.env.SESSION_MAX_AGE ?? '604800000'), // 7 days
     sameSite: process.env.SESSION_SAME_SITE || 'lax',
     secure: process.env.SESSION_SECURE === 'true',
+  },
+  mail: {
+    resend: {
+      disabled: process.env.MAIL_RESEND_DISABLED === 'true',
+      apiKey: process.env.RESEND_API_KEY,
+    },
+    from: process.env.MAIL_FROM,
   },
   google: {
     disabled: process.env.GOOGLE_DISABLED === 'true',

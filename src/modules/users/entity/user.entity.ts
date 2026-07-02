@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsDate,
   IsEmail,
   IsEnum,
@@ -64,6 +65,23 @@ export class User {
   @IsEnum(AuthProvider)
   @Column({ type: 'enum', enum: AuthProvider, default: AuthProvider.LOCAL })
   authProvider!: AuthProvider;
+
+  @ApiProperty({
+    description: 'Whether the email address has been verified',
+    example: false,
+  })
+  @IsBoolean()
+  @Column({ default: false })
+  emailVerified!: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Token used to confirm the email address',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  @Column({ type: 'varchar', nullable: true, default: null })
+  emailConfirmToken!: string | null;
 
   @ApiProperty({
     description: 'Role of the user in the system',

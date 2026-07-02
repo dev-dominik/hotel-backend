@@ -24,6 +24,7 @@ import {
 } from './guards/facebook-auth.guard';
 import { RegisterRequest } from './dto/register.dto';
 import { LoginRequest } from './dto/login.dto';
+import { ConfirmEmailRequest } from './dto/confirm-email.dto';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
 import { AuthService } from './auth.service';
 
@@ -64,6 +65,13 @@ export class AuthController {
         else resolve();
       });
     });
+  }
+
+  @Post('confirm-email')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm email address with token' })
+  async confirmEmail(@Body() dto: ConfirmEmailRequest): Promise<void> {
+    await this.authService.confirmEmail(dto.token);
   }
 
   @Get('me')

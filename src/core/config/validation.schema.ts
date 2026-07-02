@@ -20,6 +20,10 @@ export const validationSchema = Joi.object({
   SESSION_SAME_SITE: Joi.string().valid('lax', 'strict', 'none').default('lax'),
   SESSION_SECURE: Joi.boolean().required(),
 
+  MAIL_RESEND_DISABLED: Joi.boolean().default(false),
+  RESEND_API_KEY: Joi.string().optional().allow(''),
+  MAIL_FROM: Joi.string().optional().allow(''),
+
   GOOGLE_DISABLED: Joi.boolean().default(false),
   GOOGLE_CLIENT_ID: Joi.string().optional().allow(''),
   GOOGLE_CLIENT_SECRET: Joi.string().optional().allow(''),

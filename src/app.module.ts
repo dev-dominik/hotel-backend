@@ -6,6 +6,7 @@ import { StatusModule } from './modules/status/status.module.js';
 import { AppConfigModule } from './core/config/config.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { MailModule } from './core/mail/mail.module.js';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UsersModule } from './modules/users/users.module.js';
     StatusModule,
     AuthModule,
     UsersModule,
+    MailModule,
   ],
 })
 export class AppModule {}
