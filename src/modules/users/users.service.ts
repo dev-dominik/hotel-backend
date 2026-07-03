@@ -69,6 +69,7 @@ export class UsersService {
 
   async findOrCreateOAuthUser(data: {
     email: string;
+    emailVerified?: boolean;
     name: string;
     provider: AuthProvider;
   }): Promise<User> {
@@ -87,6 +88,7 @@ export class UsersService {
       role: UserRole.USER,
       permissions: [],
       authProvider: data.provider,
+      emailVerified: data.emailVerified ?? true,
     });
 
     return await this.usersRepository.save(user);

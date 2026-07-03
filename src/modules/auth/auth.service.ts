@@ -84,6 +84,7 @@ export class AuthService {
 
   async findOrCreateOAuthUser(data: {
     email: string;
+    emailVerified?: boolean;
     name: string;
     provider: AuthProvider;
   }): Promise<User> {

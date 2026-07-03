@@ -46,11 +46,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       done(new Error('No email returned from Google'));
       return;
     }
+    const emailVerified = profile.emails?.[0]?.verified === true;
+    if (!emailVerified) {
+      done(new UnauthorizedException('Email not verified by Google'));
+      return;
+    }
 
     const user = await this.authService.findOrCreateOAuthUser({
       email,
       name: profile.displayName,
       provider: AuthProvider.GOOGLE,
+      emailVerified,
     });
 
     done(null, user);
