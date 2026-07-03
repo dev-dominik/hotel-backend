@@ -1,116 +1,129 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Hotel Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS REST API for the Hotel Booking application.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Stack:** NestJS · TypeORM · PostgreSQL · Redis (sessions) · Resend (email) · Passport (local, Google, Facebook)
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Prerequisites
 
-## Project setup
+- Node.js 20+
+- pnpm
+- PostgreSQL 15+
+- Redis 7+
+
+---
+
+## Setup
+
+1. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+2. **Configure environment**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` — the required variables are described below.
+
+3. **Start infrastructure** (PostgreSQL + Redis via Docker)
+
+   ```bash
+   docker-compose up -d postgres redis
+   ```
+
+4. **Run migrations**
+
+   ```bash
+   pnpm db:migration:run
+   ```
+
+5. **Start the server**
+
+   ```bash
+   pnpm start:dev
+   ```
+
+   API is available at `http://localhost:3000`.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `PORT` | No | Server port (default: `3000`) |
+| `DOMAIN` | Yes | Frontend origin, e.g. `http://localhost:5173`. Used in email links. |
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `DATABASE_SSL` | No | Enable SSL for DB (default: `false`) |
+| `DATABASE_POOL_SIZE` | No | Connection pool size (default: `10`) |
+| `REDIS_URL` | Yes | Redis connection string |
+| `SESSION_NAME` | Yes | Cookie name |
+| `SESSION_SECRET` | Yes | Cookie signing secret (min 32 chars) |
+| `SESSION_SECURE` | Yes | Set `true` in production (HTTPS only) |
+| `SESSION_SAME_SITE` | No | `lax` / `strict` / `none` (default: `lax`) |
+| `SESSION_MAX_AGE` | No | Session TTL in ms (default: `604800000` — 7 days) |
+| `MAIL_RESEND_DISABLED` | No | Set `true` to skip sending emails (default: `false`) |
+| `RESEND_API_KEY` | No | [Resend](https://resend.com) API key (required if mail is enabled) |
+| `MAIL_FROM` | No | Sender address. Use `delivered@resend.dev` for local testing. |
+| `HCAPTCHA_SECRET` | Yes | hCaptcha secret key. Use `0x0000000000000000000000000000000000000000` for testing. |
+| `GOOGLE_DISABLED` | No | Set `false` to enable Google OAuth (default: `true`) |
+| `GOOGLE_CLIENT_ID` | No | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | No | Google OAuth client secret |
+| `FACEBOOK_DISABLED` | No | Set `false` to enable Facebook OAuth (default: `true`) |
+| `FACEBOOK_APP_ID` | No | Facebook App ID |
+| `FACEBOOK_APP_SECRET` | No | Facebook App secret |
+
+---
+
+## Scripts
 
 ```bash
-$ pnpm install
+# Development (watch mode)
+pnpm start:dev
+
+# Production
+pnpm build
+pnpm start:prod
+
+# Linting
+pnpm lint
+
+# Tests
+pnpm test
+pnpm test:e2e
+pnpm test:cov
 ```
 
-## Compile and run the project
+---
+
+## Database Migrations
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-Migration commands (in package.json):
-
 # Generate a migration from entity changes
+pnpm db:migration:generate src/database/migrations/<MigrationName>
 
-pnpm db:migration:generate src/database/migrations/InitialMigration
-
-# Run pending migrations
-
+# Run all pending migrations
 pnpm db:migration:run
 
-# Roll back last migration
-
+# Revert the last migration
 pnpm db:migration:revert
 
 # List all migrations and their status
-
 pnpm db:migration:show
+```
+
+---
+
+## Running with Docker
+
+To run the full stack (API + PostgreSQL + Redis) in Docker:
+
+```bash
+docker-compose up --build
+```
