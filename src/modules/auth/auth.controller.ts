@@ -68,7 +68,7 @@ export class AuthController {
   }
 
   @Post('confirm-email')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Confirm email address with token' })
   async confirmEmail(@Body() dto: ConfirmEmailRequest): Promise<void> {
     await this.authService.confirmEmail(dto.token);
