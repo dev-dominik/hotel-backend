@@ -7,6 +7,8 @@ export class ClientUser extends PickType(User, [
   'name',
   'role',
   'permissions',
+  'authProvider',
+  'emailVerified',
   'lastLoginAt',
   'createdAt',
 ]) {}

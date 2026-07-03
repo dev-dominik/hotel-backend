@@ -4,16 +4,27 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Ip,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
+import {
+  GoogleAuthGuard,
+  GoogleCallbackGuard,
+} from './guards/google-auth.guard';
+import {
+  FacebookAuthGuard,
+  FacebookCallbackGuard,
+} from './guards/facebook-auth.guard';
 import { RegisterRequest } from './dto/register.dto';
 import { LoginRequest } from './dto/login.dto';
+import { ConfirmEmailRequest } from './dto/confirm-email.dto';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
 import { AuthService } from './auth.service';
 
@@ -24,8 +35,11 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  async register(@Body() dto: RegisterRequest): Promise<ClientUser> {
-    return await this.authService.register(dto);
+  async register(
+    @Body() dto: RegisterRequest,
+    @Ip() ip: string,
+  ): Promise<ClientUser> {
+    return await this.authService.register({ dto, ip });
   }
 
   @UseGuards(LocalAuthGuard)
@@ -53,10 +67,41 @@ export class AuthController {
     });
   }
 
+  @Post('confirm-email')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm email address with token' })
+  async confirmEmail(@Body() dto: ConfirmEmailRequest): Promise<void> {
+    await this.authService.confirmEmail(dto.token);
+  }
+
   @Get('me')
   @ApiOperation({ summary: 'Get current authenticated user' })
   me(@Req() req: Request): ClientUser | null {
     if (!req.user) return null;
     return this.authService.toClientUser(req.user);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Initiate Google OAuth login' })
+  googleLogin(): void {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleCallbackGuard)
+  @ApiOperation({ summary: 'Google OAuth callback' })
+  googleCallback(@Res() res: Response): void {
+    res.redirect('/');
+  }
+
+  @Get('facebook')
+  @UseGuards(FacebookAuthGuard)
+  @ApiOperation({ summary: 'Initiate Facebook OAuth login' })
+  facebookLogin(): void {}
+
+  @Get('facebook/callback')
+  @UseGuards(FacebookCallbackGuard)
+  @ApiOperation({ summary: 'Facebook OAuth callback' })
+  facebookCallback(@Res() res: Response): void {
+    res.redirect('/');
   }
 }
