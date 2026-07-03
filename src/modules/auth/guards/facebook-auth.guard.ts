@@ -42,7 +42,13 @@ export class FacebookCallbackGuard extends AuthGuard('facebook') {
     const req = context.switchToHttp().getRequest<Request>();
     await super.logIn(req);
     await new Promise<void>((resolve, reject) =>
-      req.session.save((err: unknown) => (err ? reject(err) : resolve())),
+      req.session.save((err: unknown) =>
+        err
+          ? reject(
+              err instanceof Error ? err : new Error('Session save failed'),
+            )
+          : resolve(),
+      ),
     );
     return result;
   }
