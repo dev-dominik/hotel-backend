@@ -7,6 +7,7 @@ import { AppConfigModule } from './core/config/config.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { MailModule } from './core/mail/mail.module.js';
+import { AdminModule } from './modules/admin/admin.module.js';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { MailModule } from './core/mail/mail.module.js';
     AuthModule,
     UsersModule,
     MailModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

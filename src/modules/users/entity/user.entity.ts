@@ -74,6 +74,14 @@ export class User {
   @Column({ default: false })
   emailVerified!: boolean;
 
+  @ApiProperty({
+    description: 'Whether the user is blocked from making reservations',
+    example: false,
+  })
+  @IsBoolean()
+  @Column({ default: false })
+  isBlocked!: boolean;
+
   @ApiPropertyOptional({
     description: 'Token used to confirm the email address',
     nullable: true,

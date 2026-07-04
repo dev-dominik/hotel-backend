@@ -73,6 +73,7 @@ export class AuthService {
       permissions: user.permissions,
       authProvider: user.authProvider,
       emailVerified: user.emailVerified,
+      isBlocked: user.isBlocked,
       lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
     };
