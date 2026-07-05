@@ -11,6 +11,7 @@ import { User } from '@/modules/users/entity/user.entity';
 import { AuthController } from './auth.controller';
 import { HCaptchaService } from './hcaptch.service';
 import { MailModule } from '@/core/mail/mail.module';
+import { AuthorizationGuard } from './guards/authorization.guard';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { MailModule } from '@/core/mail/mail.module';
     GoogleStrategy,
     FacebookStrategy,
     SessionSerializer,
+    AuthorizationGuard,
   ],
-  exports: [SessionSerializer],
+  exports: [SessionSerializer, AuthorizationGuard],
 })
 export class AuthModule {}
