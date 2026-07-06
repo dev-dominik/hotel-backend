@@ -9,13 +9,13 @@ importers:
   .:
     dependencies:
       '@nestjs/common':
-        specifier: ^11.0.1
+        specifier: ^11.1.21
         version: 11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/config':
         specifier: ^4.0.3
         version: 4.0.4(@nestjs/common@11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(rxjs@7.8.2)
       '@nestjs/core':
-        specifier: ^11.0.1
+        specifier: ^11.1.21
         version: 11.1.21(@nestjs/common@11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.21)(@nestjs/websockets@11.1.21)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/cqrs':
         specifier: ^11.0.3
@@ -114,6 +114,15 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.1
         version: 11.1.21(@nestjs/common@11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.21)(@nestjs/platform-express@11.1.21)
+      '@suites/di.nestjs':
+        specifier: ^3.1.0
+        version: 3.1.0(@nestjs/common@11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)
+      '@suites/doubles.jest':
+        specifier: ^3.1.0
+        version: 3.1.0(jest@30.4.2(@types/node@22.19.19)(ts-node@10.9.2(@types/node@22.19.19)(typescript@5.9.3)))
+      '@suites/unit':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -160,7 +169,7 @@ importers:
         specifier: ^16.0.0
         version: 16.5.0
       jest:
-        specifier: ^30.0.0
+        specifier: ^30.4.2
         version: 30.4.2(@types/node@22.19.19)(ts-node@10.9.2(@types/node@22.19.19)(typescript@5.9.3))
       prettier:
         specifier: ^3.4.2
@@ -172,7 +181,7 @@ importers:
         specifier: ^7.0.0
         version: 7.2.2
       ts-jest:
-        specifier: ^29.2.5
+        specifier: ^29.4.9
         version: 29.4.9(@babel/core@7.29.0)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0))(jest-util@30.4.1)(jest@30.4.2(@types/node@22.19.19)(ts-node@10.9.2(@types/node@22.19.19)(typescript@5.9.3)))(typescript@5.9.3)
       ts-loader:
         specifier: ^9.5.2
@@ -184,7 +193,7 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.3
         version: 5.9.3
       typescript-eslint:
         specifier: ^8.20.0
@@ -944,6 +953,38 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  '@suites/core.unit@3.1.0':
+    resolution: {integrity: sha512-2aG83BiIuOOVwu8Joisi4soSMI2isYBR8wJXWq+jInWOFCtQq+6cFwhXmpqRheMX0aKk7kb14HpclclMvpK3nQ==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
+
+  '@suites/di.nestjs@3.1.0':
+    resolution: {integrity: sha512-SKPdfqZRqjDKRfte8Id1xvmhCNOSSnDSFS68Qcw04IirnUEAAm/wjJBv3Bo8tH/YjzlZkAjzpapZTiWePSM9qg==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
+    peerDependencies:
+      '@nestjs/common': '>= 8.0'
+      reflect-metadata: <1.0.0
+
+  '@suites/doubles.jest@3.1.0':
+    resolution: {integrity: sha512-Im4lTiotwGkZHR2LcimgCMrqYBtHuU6lp+JCKJM1SiW3mBRxLskjpo/dTptgPu5O/Q/QMhBaGzU5QfpMLcg91w==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
+    peerDependencies:
+      jest: '> 26.0'
+
+  '@suites/types.common@3.1.0':
+    resolution: {integrity: sha512-4OW/FKP78HZiUjSeAq6ix/lj2s4vEU4IqFr09LLmQC77v1Rv5vEW1LZLxrRVlP2jeWsxuVka6WX2k7k3HJDu9A==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
+
+  '@suites/types.di@3.1.0':
+    resolution: {integrity: sha512-ng/so6i2dbvSUyCAN/UhLO0N/72B08XycXBCUGmE6CK2OgzNGPjTjcIN1moljyUzZQBYHvYSdUju2aZ6Fh2tOA==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
+
+  '@suites/types.doubles@3.1.0':
+    resolution: {integrity: sha512-VhEtcgUPYe1L0xLie2VrqO8b+EPCdVnU30qS//nQA9UtRYA3dRqENNGI6ktmfKAvUKC9ToJdwE/B/TohZt290A==}
+
+  '@suites/unit@3.1.1':
+    resolution: {integrity: sha512-gHnAj4Xx5ckFjpo8jhHyriiqdpDXjFmwBTDht1T/czhTv1P3U2rZdEtwyWQISkgJFvxQjC6hfS7GftAKYgehjA==}
+    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
 
   '@tokenizer/inflate@0.4.1':
     resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
@@ -4572,6 +4613,44 @@ snapshots:
   '@stablelib/base64@1.0.1': {}
 
   '@standard-schema/spec@1.1.0': {}
+
+  '@suites/core.unit@3.1.0':
+    dependencies:
+      '@suites/types.common': 3.1.0
+      '@suites/types.di': 3.1.0
+      '@suites/types.doubles': 3.1.0
+
+  '@suites/di.nestjs@3.1.0(@nestjs/common@11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)':
+    dependencies:
+      '@nestjs/common': 11.1.21(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@suites/types.common': 3.1.0
+      '@suites/types.di': 3.1.0
+      reflect-metadata: 0.2.2
+
+  '@suites/doubles.jest@3.1.0(jest@30.4.2(@types/node@22.19.19)(ts-node@10.9.2(@types/node@22.19.19)(typescript@5.9.3)))':
+    dependencies:
+      '@suites/core.unit': 3.1.0
+      '@suites/types.common': 3.1.0
+      '@suites/types.di': 3.1.0
+      '@suites/types.doubles': 3.1.0
+      jest: 30.4.2(@types/node@22.19.19)(ts-node@10.9.2(@types/node@22.19.19)(typescript@5.9.3))
+
+  '@suites/types.common@3.1.0': {}
+
+  '@suites/types.di@3.1.0':
+    dependencies:
+      '@suites/types.common': 3.1.0
+
+  '@suites/types.doubles@3.1.0':
+    dependencies:
+      '@suites/types.common': 3.1.0
+
+  '@suites/unit@3.1.1':
+    dependencies:
+      '@suites/core.unit': 3.1.0
+      '@suites/types.common': 3.1.0
+      '@suites/types.di': 3.1.0
+      '@suites/types.doubles': 3.1.0
 
   '@tokenizer/inflate@0.4.1':
     dependencies:
