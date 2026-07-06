@@ -67,10 +67,11 @@ export class AuthService {
     });
 
     const confirmUrl = `${this.config.domain}/auth/confirm-email?token=${emailConfirmToken}`;
-    await this.mailService.sendEmail({
-      to: dto.email,
-      subject: 'Confirm your email address',
-      html: `
+    try {
+      await this.mailService.sendEmail({
+        to: dto.email,
+        subject: 'Confirm your email address',
+        html: `
         <div style="font-family:sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px">
           <h1 style="font-size:24px;margin-bottom:8px">Confirm your email address</h1>
           <p style="color:#555;margin-bottom:24px">Click the button below to confirm your email and activate your account.</p>
@@ -78,7 +79,13 @@ export class AuthService {
           <p style="color:#aaa;font-size:13px;margin-top:24px">If you didn't create an account, you can safely ignore this email.</p>
         </div>
       `,
-    });
+      });
+    } catch (err) {
+      this.logger.error(
+        `Failed to send email confirmation to ${dto.email}`,
+        err,
+      );
+    }
 
     return {
       id: user.id,
