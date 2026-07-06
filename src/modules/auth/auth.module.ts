@@ -12,6 +12,8 @@ import { AuthController } from './auth.controller';
 import { HCaptchaService } from './hcaptch.service';
 import { MailModule } from '@/core/mail/mail.module';
 import { AuthorizationGuard } from './guards/authorization.guard';
+import { AppThrottlerModule } from '@/core/throttler/throttler.module';
+import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { AuthorizationGuard } from './guards/authorization.guard';
     TypeOrmModule.forFeature([User]),
     UsersModule,
     MailModule,
+    AppThrottlerModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -29,6 +32,7 @@ import { AuthorizationGuard } from './guards/authorization.guard';
     FacebookStrategy,
     SessionSerializer,
     AuthorizationGuard,
+    AppThrottlerGuard,
   ],
   exports: [SessionSerializer, AuthorizationGuard],
 })
