@@ -11,6 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
 import { AdminGuard } from '../guards/admin.guard';
 import { AdminRoomService } from './room.service';
 import { CreateRoomRequest, CreateRoomResponse } from './dto/create.dto';
@@ -18,7 +20,8 @@ import { UpdateRoomRequest, UpdateRoomResponse } from './dto/update.dto';
 import { DeleteRoomResponse } from './dto/delete.dto';
 
 @ApiTags('admin')
-@UseGuards(AdminGuard)
+@UseGuards(AdminGuard, AppThrottlerGuard)
+@Throttle({ auth: { limit: 60, ttl: 60_000 } })
 @Controller('admin/rooms')
 export class AdminRoomController {
   constructor(private readonly adminRoomService: AdminRoomService) {}
