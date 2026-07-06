@@ -67,6 +67,10 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
+  async updatePassword(id: string, passwordHash: string): Promise<void> {
+    await this.usersRepository.update(id, { passwordHash });
+  }
+
   async findOrCreateOAuthUser(data: {
     email: string;
     emailVerified?: boolean;

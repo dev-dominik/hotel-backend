@@ -13,21 +13,23 @@ import {
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
+import { LocalAuthGuard } from '@/modules/auth/guards/local-auth.guard';
+import { AuthenticatedGuard } from '@/modules/auth/guards/authenticated.guard';
 import {
   GoogleAuthGuard,
   GoogleCallbackGuard,
-} from './guards/google-auth.guard';
+} from '@/modules/auth/guards/google-auth.guard';
 import {
   FacebookAuthGuard,
   FacebookCallbackGuard,
-} from './guards/facebook-auth.guard';
-import { RegisterRequest } from './dto/register.dto';
-import { LoginRequest } from './dto/login.dto';
-import { ConfirmEmailRequest } from './dto/confirm-email.dto';
+} from '@/modules/auth/guards/facebook-auth.guard';
+import { RegisterRequest } from '@/modules/auth/dto/register.dto';
+import { LoginRequest } from '@/modules/auth/dto/login.dto';
+import { ConfirmEmailRequest } from '@/modules/auth/dto/confirm-email.dto';
+import { ForgotPasswordRequest } from '@/modules/auth/dto/forgot-password.dto';
+import { ResetPasswordRequest } from '@/modules/auth/dto/reset-password.dto';
 import type { ClientUser } from '@/modules/users/entity/user-client.entity';
-import { AuthService } from './auth.service';
+import { AuthService } from '@/modules/auth/auth.service';
 import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
 
 @ApiTags('auth')
@@ -79,6 +81,22 @@ export class AuthController {
   @ApiOperation({ summary: 'Confirm email address with token' })
   async confirmEmail(@Body() dto: ConfirmEmailRequest): Promise<void> {
     await this.authService.confirmEmail(dto.token);
+  }
+
+  @Post('forgot-password')
+  @Throttle({ auth: { limit: 3, ttl: 900_000 } })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Request a password reset email' })
+  async forgotPassword(@Body() dto: ForgotPasswordRequest): Promise<void> {
+    await this.authService.forgotPassword(dto.email);
+  }
+
+  @Post('reset-password')
+  @Throttle({ auth: { limit: 5, ttl: 900_000 } })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Reset password using token from email' })
+  async resetPassword(@Body() dto: ResetPasswordRequest): Promise<void> {
+    await this.authService.resetPassword(dto.token, dto.password);
   }
 
   @Get('me')
