@@ -4,6 +4,9 @@
 /build
 tsconfig.tsbuildinfo
 
+# local media uploads (MEDIA_STORAGE=local)
+/uploads
+
 # Logs
 logs
 *.log

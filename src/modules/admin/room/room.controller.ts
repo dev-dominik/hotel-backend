@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -18,13 +19,20 @@ import { AdminRoomService } from './room.service';
 import { CreateRoomRequest, CreateRoomResponse } from './dto/create.dto';
 import { UpdateRoomRequest, UpdateRoomResponse } from './dto/update.dto';
 import { DeleteRoomResponse } from './dto/delete.dto';
-
+import { ListRoomsResponse } from './dto/list.dto';
 @ApiTags('admin')
 @UseGuards(AdminGuard, AppThrottlerGuard)
 @Throttle({ auth: { limit: 60, ttl: 60_000 } })
 @Controller('admin/rooms')
 export class AdminRoomController {
   constructor(private readonly adminRoomService: AdminRoomService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'List all room types' })
+  @ApiResponse({ status: 200, type: [ListRoomsResponse] })
+  listRooms() {
+    return this.adminRoomService.listRooms();
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

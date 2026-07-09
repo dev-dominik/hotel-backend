@@ -14,6 +14,10 @@ export class AdminRoomService {
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
   ) {}
 
+  async listRooms(): Promise<Room[]> {
+    return this.roomRepository.find({ order: { createdAt: 'ASC' } });
+  }
+
   async insertRoom(
     room: Pick<
       Room,

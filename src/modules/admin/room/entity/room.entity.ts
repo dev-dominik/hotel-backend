@@ -111,8 +111,7 @@ export class Room {
     description: 'Main room image URL',
   })
   @IsString()
-  @IsNotEmpty()
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   @Column({ type: 'varchar', length: 500 })
   mainImageUrl!: string;
 
@@ -126,7 +125,7 @@ export class Room {
   })
   @IsArray()
   @IsString({ each: true })
-  @IsUrl({}, { each: true })
+  @IsUrl({ require_tld: false }, { each: true })
   @Column({
     type: 'text',
     array: true,

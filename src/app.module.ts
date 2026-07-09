@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { MailModule } from './core/mail/mail.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
+import { MediaModule } from './modules/media/media.module.js';
+import { RoomsModule } from './modules/rooms/rooms.module.js';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { AdminModule } from './modules/admin/admin.module.js';
     UsersModule,
     MailModule,
     AdminModule,
+    MediaModule,
+    RoomsModule,
   ],
 })
 export class AppModule {}

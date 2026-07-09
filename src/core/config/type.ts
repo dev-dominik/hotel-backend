@@ -39,6 +39,16 @@ export interface AppConfig {
   hCaptcha: {
     secret: string;
   };
+  cloudinary: {
+    cloudName: string;
+    apiKey: string;
+    apiSecret: string;
+  };
+  media: {
+    storage: 'local' | 'cloudinary';
+    localUploadDir: string;
+    localBaseUrl: string;
+  };
 }
 
 export default registerAs('app', () => ({
@@ -79,5 +89,17 @@ export default registerAs('app', () => ({
   },
   hCaptcha: {
     secret: process.env.HCAPTCHA_SECRET,
+  },
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
+  media: {
+    storage: (process.env.MEDIA_STORAGE || 'cloudinary') as
+      | 'local'
+      | 'cloudinary',
+    localUploadDir: process.env.MEDIA_LOCAL_UPLOAD_DIR || './uploads',
+    localBaseUrl: process.env.MEDIA_LOCAL_BASE_URL || 'http://localhost:3000',
   },
 }));
