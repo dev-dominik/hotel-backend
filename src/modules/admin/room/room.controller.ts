@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -19,7 +20,10 @@ import { AdminRoomService } from './room.service';
 import { CreateRoomRequest, CreateRoomResponse } from './dto/create.dto';
 import { UpdateRoomRequest, UpdateRoomResponse } from './dto/update.dto';
 import { DeleteRoomResponse } from './dto/delete.dto';
-import { ListRoomsResponse } from './dto/list.dto';
+import {
+  ListAdminRoomsQuery,
+  PaginatedAdminRoomsResponse,
+} from './dto/list.dto';
 @ApiTags('admin')
 @UseGuards(AdminGuard, AppThrottlerGuard)
 @Throttle({ auth: { limit: 60, ttl: 60_000 } })
@@ -28,10 +32,12 @@ export class AdminRoomController {
   constructor(private readonly adminRoomService: AdminRoomService) {}
 
   @Get()
-  @ApiOperation({ summary: 'List all room types' })
-  @ApiResponse({ status: 200, type: [ListRoomsResponse] })
-  listRooms() {
-    return this.adminRoomService.listRooms();
+  @ApiOperation({ summary: 'List all room types (paginated)' })
+  @ApiResponse({ status: 200, type: PaginatedAdminRoomsResponse })
+  listRooms(
+    @Query() query: ListAdminRoomsQuery,
+  ): Promise<PaginatedAdminRoomsResponse> {
+    return this.adminRoomService.listRooms(query.page, query.limit);
   }
 
   @Post()

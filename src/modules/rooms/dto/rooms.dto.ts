@@ -1,17 +1,29 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsPositive } from 'class-validator';
+import { IsInt, IsOptional, IsPositive, Max } from 'class-validator';
 
 export class ListRoomsQuery {
-  @ApiPropertyOptional({
-    description: 'Minimum guest capacity to filter by',
-    example: 2,
-  })
+  @ApiPropertyOptional({ description: 'Minimum guest capacity', example: 2 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @IsPositive()
   capacity?: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  page?: number;
+
+  @ApiPropertyOptional({ example: 6 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  @Max(50)
+  limit?: number;
 }
 
 export class PublicRoomResponse {
@@ -38,4 +50,21 @@ export class PublicRoomResponse {
 
   @ApiProperty({ example: ['https://example.com/img1.jpg'] })
   imageUrls!: string[];
+}
+
+export class PaginatedRoomsResponse {
+  @ApiProperty({ type: [PublicRoomResponse] })
+  items!: PublicRoomResponse[];
+
+  @ApiProperty({ example: 12 })
+  total!: number;
+
+  @ApiProperty({ example: 1 })
+  page!: number;
+
+  @ApiProperty({ example: 6 })
+  limit!: number;
+
+  @ApiProperty({ example: 2 })
+  totalPages!: number;
 }

@@ -14,8 +14,22 @@ export class AdminRoomService {
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
   ) {}
 
-  async listRooms(): Promise<Room[]> {
-    return this.roomRepository.find({ order: { createdAt: 'ASC' } });
+  async listRooms(
+    page = 1,
+    limit = 10,
+  ): Promise<{
+    items: Room[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const [items, total] = await this.roomRepository.findAndCount({
+      order: { createdAt: 'ASC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async insertRoom(
