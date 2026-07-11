@@ -38,7 +38,7 @@ jobs:
         run: pnpm lint
 
       - name: Run unit tests
-        run: pnpm test --no-coverage
+        run: pnpm test -- --no-coverage
 
   build-and-push:
     runs-on: ubuntu-latest
