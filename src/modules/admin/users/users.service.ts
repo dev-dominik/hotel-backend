@@ -12,7 +12,7 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UpdateUserPermissionsDto } from './dto/update-user-permissions.dto';
 
 @Injectable()
-export class AdminService {
+export class AdminUsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
@@ -25,12 +25,15 @@ export class AdminService {
       .createQueryBuilder('user')
       .orderBy('user.createdAt', 'DESC');
 
-    if (search)
+    if (search) {
       qb.andWhere('(user.name ILIKE :search OR user.email ILIKE :search)', {
         search: `%${search}%`,
       });
+    }
 
-    if (role) qb.andWhere('user.role = :role', { role });
+    if (role) {
+      qb.andWhere('user.role = :role', { role });
+    }
 
     if (status === 'active') {
       qb.andWhere('user.isBlocked = false');
@@ -78,9 +81,9 @@ export class AdminService {
     dto: UpdateUserRoleDto,
     requesterId: string,
   ): Promise<AdminUserDto> {
-    if (id === requesterId)
+    if (id === requesterId) {
       throw new BadRequestException('You cannot change your own role');
-
+    }
     const user = await this.findOrFail(id);
     user.role = dto.role;
     await this.usersRepository.save(user);
