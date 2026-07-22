@@ -10,6 +10,7 @@ import { MailModule } from './core/mail/mail.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
 import { MediaModule } from './modules/media/media.module.js';
 import { RoomsModule } from './modules/rooms/rooms.module.js';
+import { ReservationsModule } from './modules/reservations/reservations.module.js';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { RoomsModule } from './modules/rooms/rooms.module.js';
     AdminModule,
     MediaModule,
     RoomsModule,
+    ReservationsModule,
   ],
 })
 export class AppModule {}
