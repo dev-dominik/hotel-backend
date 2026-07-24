@@ -12,7 +12,7 @@ import { Reservation } from './entity/reservation.entity';
 import { ReservationStatus } from './entity/reservation-status.enum';
 import { PaymentType } from './entity/payment-type.enum';
 import { CreateReservationRequest } from './dto/create.dto';
-import { User } from '../users/entity/user.entity';
+import { User } from '@/modules/users/entity/user.entity';
 
 // Deposit share of totalPrice when paymentType is DEPOSIT. Server-owned so a
 // client can never influence how much a "deposit" booking actually charges.

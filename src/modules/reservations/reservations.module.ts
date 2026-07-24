@@ -7,7 +7,7 @@ import { Room } from '@/modules/admin/room/entity/room.entity';
 import { Reservation } from './entity/reservation.entity';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
-import { User } from '../users/entity/user.entity';
+import { User } from '@/modules/users/entity/user.entity';
 
 @Module({
   imports: [

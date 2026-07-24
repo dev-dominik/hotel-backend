@@ -21,8 +21,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Room } from '../../admin/room/entity/room.entity';
-import { User } from '../../users/entity/user.entity';
+import { Room } from '@/modules/admin/room/entity/room.entity';
+import { User } from '@/modules/users/entity/user.entity';
 import { ReservationStatus } from './reservation-status.enum';
 import { PaymentType } from './payment-type.enum';
 
