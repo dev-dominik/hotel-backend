@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { AdminGuard } from '../admin/guards/admin.guard';
+import { AdminGuard } from '@/core/guards/admin.guard';
 import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
 import { MediaService } from './media.service';
 import {
