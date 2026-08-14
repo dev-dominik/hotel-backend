@@ -23,6 +23,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { decimalTransformer } from '@/core/database/decimal.transformer';
 
 @Entity('rooms')
 @Index(['name'], { unique: true })
@@ -64,7 +65,12 @@ export class Room {
   })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: decimalTransformer,
+  })
   pricePerNight!: number;
 
   @ApiProperty({

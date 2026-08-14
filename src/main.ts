@@ -4,7 +4,7 @@ import { appBootstrap } from './core/boostrap/app.bootstrap';
 import { passportBootstrap } from './core/boostrap/passport.boostrap';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   passportBootstrap(app);
   await appBootstrap(app);

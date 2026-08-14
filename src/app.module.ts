@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { StatusModule } from './modules/status/status.module.js';
 import { AppConfigModule } from './core/config/config.module.js';
@@ -10,10 +11,13 @@ import { MailModule } from './core/mail/mail.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
 import { MediaModule } from './modules/media/media.module.js';
 import { RoomsModule } from './modules/rooms/rooms.module.js';
+import { ReservationsModule } from './modules/reservations/reservations.module.js';
+import { PaymentModule } from './modules/payment/payment.module.js';
 
 @Module({
   imports: [
     AppConfigModule,
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService): TypeOrmModuleOptions => ({
         type: 'postgres',
@@ -45,6 +49,8 @@ import { RoomsModule } from './modules/rooms/rooms.module.js';
     AdminModule,
     MediaModule,
     RoomsModule,
+    ReservationsModule,
+    PaymentModule,
   ],
 })
 export class AppModule {}

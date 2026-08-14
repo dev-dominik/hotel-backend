@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
-import { AdminGuard } from '../guards/admin.guard';
+import { AdminGuard } from '@/core/guards/admin.guard';
 import { AdminUsersService } from './users.service';
 import { ListUsersQueryDto } from './dto/list-users-query.dto';
 import { AdminUserDto, PaginatedUsersResponse } from './dto/admin-user.dto';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminGuard } from '../admin/guards/admin.guard';
+import { AdminGuard } from '@/core/guards/admin.guard';
 import { AppThrottlerModule } from '@/core/throttler/throttler.module';
 import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
 import { Media } from './entity/media.entity';

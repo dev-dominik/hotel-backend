@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -96,6 +97,17 @@ export class UsersService {
     });
 
     return await this.usersRepository.save(user);
+  }
+
+  async throwIfNotExistsOrEmailNotVerified(userId: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) throw new NotFoundException('User not found!');
+    if (!user.emailVerified)
+      throw new ForbiddenException('Please verify your email!');
+
+    return user;
   }
 
   toClientUser(user: User): ClientUser {
