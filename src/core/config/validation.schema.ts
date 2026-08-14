@@ -32,4 +32,12 @@ export const validationSchema = Joi.object({
   FACEBOOK_APP_SECRET: Joi.string().optional().allow(''),
 
   HCAPTCHA_SECRET: Joi.string().required(),
+
+  PAYMENTS_CURRENCY: Joi.string().length(3).uppercase().default('PLN'),
+
+  STRIPE_DISABLED: Joi.boolean().default(false),
+  STRIPE_SECRET_KEY: Joi.string().required(),
+  STRIPE_WEBHOOK_SECRET: Joi.string().required(),
+  STRIPE_SUCCESS_URL: Joi.string().required(),
+  STRIPE_CANCEL_URL: Joi.string().required(),
 });

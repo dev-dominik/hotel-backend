@@ -13,5 +13,6 @@ export class CreateReservationRequest extends OmitType(Reservation, [
   'updatedAt',
   'nightsAmount',
   'amountPaid',
+  'paymentDueAt',
 ]) {}
 export class CreateReservationResponse extends Reservation {}

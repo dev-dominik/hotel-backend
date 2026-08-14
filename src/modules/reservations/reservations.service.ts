@@ -14,9 +14,8 @@ import { PaymentType } from './entity/payment-type.enum';
 import { CreateReservationRequest } from './dto/create.dto';
 import { User } from '@/modules/users/entity/user.entity';
 
-// Deposit share of totalPrice when paymentType is DEPOSIT. Server-owned so a
-// client can never influence how much a "deposit" booking actually charges.
 const DEPOSIT_RATE = 0.3;
+const PAYMENT_WINDOW_MS = 15 * 60 * 1000;
 
 @Injectable()
 export class ReservationsService {
@@ -101,7 +100,8 @@ export class ReservationsService {
         totalPrice,
         paymentType,
         amountPaid,
-        status: ReservationStatus.CONFIRMED,
+        status: ReservationStatus.PENDING,
+        paymentDueAt: new Date(Date.now() + PAYMENT_WINDOW_MS),
         updatedAt: new Date(),
       });
 
@@ -149,6 +149,18 @@ export class ReservationsService {
 
     reservation.status = ReservationStatus.CANCELLED;
     await this.reservationRepository.save(reservation);
+  }
+
+  async expirePendingReservations(): Promise<number> {
+    const result = await this.reservationRepository
+      .createQueryBuilder()
+      .update(Reservation)
+      .set({ status: ReservationStatus.CANCELLED })
+      .where('status = :status', { status: ReservationStatus.PENDING })
+      .andWhere('"paymentDueAt" < :now', { now: new Date() })
+      .execute();
+
+    return result.affected ?? 0;
   }
 
   private async findOwnedReservation(
