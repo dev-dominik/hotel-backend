@@ -49,6 +49,16 @@ export interface AppConfig {
     localUploadDir: string;
     localBaseUrl: string;
   };
+  payments: {
+    currency: string;
+    stripe: {
+      disabled: boolean;
+      secretKey: string;
+      webhookSecret: string;
+      successUrl: string;
+      cancelUrl: string;
+    };
+  };
 }
 
 export default registerAs('app', () => ({
@@ -101,5 +111,15 @@ export default registerAs('app', () => ({
       | 'cloudinary',
     localUploadDir: process.env.MEDIA_LOCAL_UPLOAD_DIR || './uploads',
     localBaseUrl: process.env.MEDIA_LOCAL_BASE_URL || 'http://localhost:3000',
+  },
+  payments: {
+    currency: process.env.PAYMENTS_CURRENCY || 'PLN',
+    stripe: {
+      disabled: process.env.STRIPE_DISABLED === 'true',
+      secretKey: process.env.STRIPE_SECRET_KEY,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+      successUrl: process.env.STRIPE_SUCCESS_URL,
+      cancelUrl: process.env.STRIPE_CANCEL_URL,
+    },
   },
 }));

@@ -6,6 +6,7 @@ import { AuthenticatedGuard } from '@/modules/auth/guards/authenticated.guard';
 import { Room } from '@/modules/admin/room/entity/room.entity';
 import { Reservation } from './entity/reservation.entity';
 import { ReservationsService } from './reservations.service';
+import { ReservationsScheduler } from './reservations.scheduler';
 import { ReservationsController } from './reservations.controller';
 import { User } from '@/modules/users/entity/user.entity';
 
@@ -15,6 +16,11 @@ import { User } from '@/modules/users/entity/user.entity';
     AppThrottlerModule,
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, AuthenticatedGuard, AppThrottlerGuard],
+  providers: [
+    ReservationsService,
+    ReservationsScheduler,
+    AuthenticatedGuard,
+    AppThrottlerGuard,
+  ],
 })
 export class ReservationsModule {}

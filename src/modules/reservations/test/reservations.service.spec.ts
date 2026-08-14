@@ -106,10 +106,15 @@ describe('ReservationsService', () => {
   });
 
   describe('createReservation', () => {
+    // Relative to "now" so these stay valid regardless of when the suite runs.
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const FUTURE_CHECK_IN = new Date(Date.now() + 30 * DAY_MS);
+    const FUTURE_CHECK_OUT = new Date(Date.now() + 34 * DAY_MS);
+
     const baseDto = (): CreateReservationRequest => ({
       roomId: room.id,
-      checkInDate: new Date('2026-08-01'),
-      checkOutDate: new Date('2026-08-05'),
+      checkInDate: FUTURE_CHECK_IN,
+      checkOutDate: FUTURE_CHECK_OUT,
       adults: 2,
       children: 0,
       paymentType: PaymentType.FULL,
@@ -118,8 +123,8 @@ describe('ReservationsService', () => {
     it('should create full-paid reservation', async () => {
       const dto: CreateReservationRequest = {
         roomId: room.id,
-        checkInDate: new Date('2026-08-01'),
-        checkOutDate: new Date('2026-08-05'),
+        checkInDate: FUTURE_CHECK_IN,
+        checkOutDate: FUTURE_CHECK_OUT,
         adults: 2,
         children: 0,
         paymentType: PaymentType.FULL,
@@ -134,8 +139,12 @@ describe('ReservationsService', () => {
         totalPrice: 400,
         paymentType: PaymentType.FULL,
         amountPaid: 400,
-        status: ReservationStatus.CONFIRMED,
+        status: ReservationStatus.PENDING,
       });
+      expect(result.paymentDueAt).toBeInstanceOf(Date);
+      expect((result.paymentDueAt as Date).getTime()).toBeGreaterThan(
+        Date.now(),
+      );
       expect(repo.save).not.toHaveBeenCalled();
       expect(manager.save).toHaveBeenCalled();
     });
@@ -215,8 +224,8 @@ describe('ReservationsService', () => {
       await expect(
         service.createReservation(user.id, {
           ...baseDto(),
-          checkInDate: new Date('2026-08-05'),
-          checkOutDate: new Date('2026-08-05'),
+          checkInDate: FUTURE_CHECK_IN,
+          checkOutDate: FUTURE_CHECK_IN,
         }),
       ).rejects.toThrow(BadRequestException);
     });
@@ -303,6 +312,7 @@ describe('ReservationsService', () => {
       paymentType: PaymentType.FULL,
       amountPaid: 400,
       status: ReservationStatus.CONFIRMED,
+      paymentDueAt: null,
       createdAt: new Date(2026, 0, 1),
       updatedAt: new Date(2026, 0, 1),
       deletedAt: null,
@@ -378,6 +388,44 @@ describe('ReservationsService', () => {
         service.cancelReservation(user.id, 'missing-id'),
       ).rejects.toThrow(NotFoundException);
       expect(repo.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('expirePendingReservations', () => {
+    const makeExpiryQb = (affected: number) => ({
+      update: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      execute: jest.fn().mockResolvedValue({ affected }),
+    });
+
+    it('should cancel every PENDING reservation past its payment window', async () => {
+      const qb = makeExpiryQb(3);
+      repo.createQueryBuilder.mockReturnValue(qb as never);
+
+      const count = await service.expirePendingReservations();
+
+      expect(qb.set).toHaveBeenCalledWith({
+        status: ReservationStatus.CANCELLED,
+      });
+      expect(qb.where).toHaveBeenCalledWith('status = :status', {
+        status: ReservationStatus.PENDING,
+      });
+      expect(qb.andWhere).toHaveBeenCalledWith(
+        '"paymentDueAt" < :now',
+        expect.objectContaining({ now: expect.any(Date) }),
+      );
+      expect(count).toBe(3);
+    });
+
+    it('should return 0 when nothing has expired', async () => {
+      const qb = makeExpiryQb(0);
+      repo.createQueryBuilder.mockReturnValue(qb as never);
+
+      const count = await service.expirePendingReservations();
+
+      expect(count).toBe(0);
     });
   });
 });

@@ -23,6 +23,7 @@ import {
 } from 'typeorm';
 import { Room } from '@/modules/admin/room/entity/room.entity';
 import { User } from '@/modules/users/entity/user.entity';
+import { decimalTransformer } from '@/core/database/decimal.transformer';
 import { ReservationStatus } from './reservation-status.enum';
 import { PaymentType } from './payment-type.enum';
 
@@ -114,21 +115,37 @@ export class Reservation {
   })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: decimalTransformer,
+  })
   totalPrice!: number;
 
   @ApiProperty({
     enum: ReservationStatus,
-    example: ReservationStatus.CONFIRMED,
+    example: ReservationStatus.PENDING,
     description: 'Current status of the reservation',
   })
   @IsEnum(ReservationStatus)
   @Column({
     type: 'enum',
     enum: ReservationStatus,
-    default: ReservationStatus.CONFIRMED,
+    default: ReservationStatus.PENDING,
   })
   status!: ReservationStatus;
+
+  @ApiProperty({
+    example: '2026-07-14T12:15:00.000Z',
+    description:
+      'Deadline to pay before an unpaid (PENDING) reservation is automatically cancelled. Server-computed, never trust client input.',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDate()
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  paymentDueAt!: Date | null;
 
   @ApiProperty({
     enum: PaymentType,
@@ -152,7 +169,12 @@ export class Reservation {
   })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    transformer: decimalTransformer,
+  })
   amountPaid!: number;
 
   @ApiProperty({
