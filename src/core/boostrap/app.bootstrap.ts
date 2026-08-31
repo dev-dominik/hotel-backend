@@ -18,7 +18,7 @@ export const appBootstrap = async (app: INestApplication) => {
     credentials: true,
   });
   app.setGlobalPrefix('api/v1');
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   if (appConfig.media.storage === 'local') {
     const uploadDir = path.resolve(appConfig.media.localUploadDir);

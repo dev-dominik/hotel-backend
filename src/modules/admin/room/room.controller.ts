@@ -15,7 +15,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AppThrottlerGuard } from '@/core/throttler/throttler.guard';
-import { AdminGuard } from '../guards/admin.guard';
+import { AdminGuard } from '../../auth/guards/admin.guard';
 import { AdminRoomService } from './room.service';
 import { CreateRoomRequest, CreateRoomResponse } from './dto/create.dto';
 import { UpdateRoomRequest, UpdateRoomResponse } from './dto/update.dto';

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEnum } from 'class-validator';
 import { Permission } from '@/modules/users/entity/user.permission';
 
-export class UpdateUserPermissionsDto {
+export class UpdatePermissionsRequest {
   @ApiProperty({
     enum: Permission,
     isArray: true,
